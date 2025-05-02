@@ -1,18 +1,12 @@
 import json
+import requests
 
-
-def getLineOf(lines, text):
-    for i, line in enumerate(lines):
-        if line.strip() == text:
-            return i
-    return -1
-
-def addLines(lines, identifier, linesToAdd):
-    lineIndex = getLineOf(identifier)
-    
-    for index, line in enumerate(linesToAdd):
-        if (index == 0):
-            lines[lineIndex] = linesToAdd[index]
-        else:
-            lines.insert(lineIndex + index, linesToAdd[index])
-
+def generateName():
+    base_url = "https://randomuser.me/api/"
+    response = requests.get(f"{base_url}")
+    if response.status_code == 200:
+        data = response.json()
+        person = data["results"][0]
+        firstName = person["name"]["first"]
+        lastName = person["name"]["last"]
+    return firstName, lastName

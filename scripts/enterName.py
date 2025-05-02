@@ -1,11 +1,18 @@
 import requests
 import random
+from macro_gen import * 
 
 base_url = "https://randomuser.me/api/"
 response = requests.get(f"{base_url}")
 
 timeOffsetLowerBound = 0.003648996353149414
 timeOffsetUpperBound = 0.08896112442016602
+firstNameX = 1183
+firstNameY = 479
+lastNameX = 1080
+lastNameY = 554
+currentX = 0
+currentY = 0
 
 
 def generateName():
@@ -18,7 +25,7 @@ def generateName():
 
 def generateTimeOffset():
     return random.uniform(timeOffsetLowerBound, timeOffsetUpperBound)
-
+       
 
 def generateTextInsertion(text):
     events = []
@@ -28,5 +35,23 @@ def generateTextInsertion(text):
         event = f'{{"type":"keyboardEvent","key":"{char}","timestamp":{generateTimeOffset()},"pressed":false}}, \n'
         events.append(event)
     return events
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

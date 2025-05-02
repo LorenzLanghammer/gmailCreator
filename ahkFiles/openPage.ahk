@@ -1,12 +1,14 @@
-
-Run('C:\\Users\\stefa\\OneDrive\\Desktop\\test.pmr')
+﻿
+Run('C:\\Users\\stefa\\OneDrive\\Desktop\\PyMacroRecord')
 WinWaitActive('PyMacroRecord')
 Send('^l')
 Sleep(500)
-Send('enterName')
+Send('openPage')
 Sleep(500)
 Send('{Enter}')
 Sleep(500)
 Click(87, 105, 'Left')
-Sleep(10000)
+Sleep(5000)
 WinClose('PyMacroRecord')
+WinWaitClose('PyMacroRecord')
+
