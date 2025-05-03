@@ -3,40 +3,58 @@ import os
 import webbrowser
 import random
 import math
+import numpy as np
+sqrt3 = np.sqrt(3)
+sqrt5 = np.sqrt(5)
 
 source_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 chrome_path = r"C:\Programme\Google\Chrome\Application\chrome.exe"
 webbrowser.register('chrome', None, webbrowser.BackgroundBrowser(chrome_path))
 
 timeOffsetLowerBound = 0.000648996353149414
-timeOffsetUpperBound = 0.08896112442016602
+timeOffsetUpperBound = 0.02896112442016602
 
 maxX = 1901
 maxY = 998
 
 
-
-def generateTimeOffset():
-    return random.uniform(timeOffsetLowerBound, timeOffsetUpperBound)
-
-
-def findAndMove(currentX, currentY, targetX, targetY):
+def moveToPoint(start_x, start_y, dest_x, dest_y):
+    G_0=9
+    W_0=3
+    M_0=15
+    D_0=12
+    
     events = []
-
-    distance = math.hypot(targetX - currentX, targetY - currentY)
-    base_points = int(distance / 20)
-    num_points = random.randint(base_points, base_points + 10)
     points = []
 
-    for i in range (num_points + 1):
-        t = i / num_points
-        x = currentX + (targetX - currentX) * t
-        y = currentY + (targetY - currentY) * t
-
-        offset_x = random.uniform(-7, 7) * math.sin(math.pi * t)
-        offset_y = random.uniform(-7, 7) * math.sin(math.pi * t)
-
-        points.append((int(x + offset_x), int(y + offset_y)))
+    current_x,current_y = start_x,start_y
+    v_x = v_y = W_x = W_y = 0
+    while (dist:=np.hypot(dest_x-start_x,dest_y-start_y)) >= 1:
+        W_mag = min(W_0, dist)
+        if dist >= D_0:
+            W_x = W_x/sqrt3 + (2*np.random.random()-1)*W_mag/sqrt5
+            W_y = W_y/sqrt3 + (2*np.random.random()-1)*W_mag/sqrt5
+        else:
+            W_x /= sqrt3
+            W_y /= sqrt3
+            if M_0 < 3:
+                M_0 = np.random.random()*3 + 3
+            else:
+                M_0 /= sqrt5
+        v_x += W_x + G_0*(dest_x-start_x)/dist
+        v_y += W_y + G_0*(dest_y-start_y)/dist
+        v_mag = np.hypot(v_x, v_y)
+        if v_mag > M_0:
+            v_clip = M_0/2 + np.random.random()*M_0/2
+            v_x = (v_x/v_mag) * v_clip
+            v_y = (v_y/v_mag) * v_clip
+        start_x += v_x
+        start_y += v_y
+        move_x = int(np.round(start_x))
+        move_y = int(np.round(start_y))
+        if current_x != move_x or current_y != move_y:
+            #move_mouse(current_x:=move_x,current_y:=move_y)
+            points.append([move_x, move_y])
 
     for i, point in enumerate(points):
         event = ""
@@ -47,16 +65,12 @@ def findAndMove(currentX, currentY, targetX, targetY):
         events.append(event)
     return events
 
-def joinEventsComma(events1, events2):
-    events = []
-    for i, event in enumerate(events1): 
-        events.append(event + ",")
-    for i, event in enumerate(events2):
-        if (i != len(events2) -1):
-            events.append(event + ",")
-        else:
-            events.append(event)
-    return events
+
+def generateTimeOffset():
+    return random.uniform(timeOffsetLowerBound, timeOffsetUpperBound)
+
+
+
 
 def joinEvents(eventsList):
     result = []
@@ -69,22 +83,11 @@ def joinEvents(eventsList):
     return result
 
 
-def findAndMoveOvershoot(element, currentX, currentY):
-    location = pyautogui.locateCenterOnScreen(os.path.join(source_dir, f'elementImages\{element}'), confidence=0.8)
-    findAndMoveOvershootPoint(currentX, currentY, location.x, location.y)
 
-def findAndMoveOvershootPoint(currentX, currentY, targetX, targetY):
-    distance = math.dist([currentX, currentY], [targetX, targetY])
-    offset = 1.1 + 100/distance
-    overShootPoint = [currentX + (targetX - currentX) * (offset), currentY + (targetY - currentY) * (offset)]
-    moveToOvershoot = findAndMove(currentX, currentY, overShootPoint[0], overShootPoint[1])
-    moveToTarget = findAndMove(overShootPoint[0], overShootPoint[1], targetX, targetY)
-    result = joinEvents([moveToOvershoot, moveToTarget])
-    return joinEvents([moveToOvershoot, moveToTarget])
     
 
 def randomMouseMovement(currentX, currentY, targetX, targetY):
-    num_points = random.randint(3, 7) + 1
+    num_points = random.randint(2, 4) + 1
     events = []
 
     startX = currentX
@@ -95,11 +98,11 @@ def randomMouseMovement(currentX, currentY, targetX, targetY):
     for i in range(num_points):
         newX = random.randint(0, maxX)
         newY = random.randint(0, maxY)
-        randomMovement = findAndMove(startX, startY, newX, newY)
+        randomMovement = moveToPoint(startX, startY, newX, newY)
         startX = newX
         startY = newY
         events.append(randomMovement)
-    lastMovement = findAndMove(newX, newY, targetX, targetY)
+    lastMovement = moveToPoint(newX, newY, targetX, targetY)
     events.append(lastMovement)
     return joinEvents(events)
 
@@ -134,4 +137,9 @@ def scrollDown(num_scrolls):
             events.append(f'{{"type":"scrollEvent","dx":0,"dy":-1,"timestamp":{generateTimeOffset()}}}')
         else: 
             events.append(f'{{"type":"scrollEvent","dx":0,"dy":-1,"timestamp":{generateTimeOffset()}}},')
+    return events
+
+def pauseAt(x, y):
+    events = []
+    events.append(f'{{"type": "cursorMove","x": {x},"y": {y},"timestamp": {0.9}}}')
     return events

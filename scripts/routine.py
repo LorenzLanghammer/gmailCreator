@@ -34,18 +34,30 @@ class OpenPageRoutine(Routine):
     def generateMacroCodes(self):
         with open(os.path.join(source_dir, "persistentValues\openPage.json"), "r") as f:
             data = json.load(f)
-        moveToGoogleResult = findAndMoveOvershootPoint(0, 0, data["google_resultX"], data["google_resultY"])
+        moveToGoogleResult = moveToPoint(0, 0, data["google_resultX"], data["google_resultY"])
         clickGoogleResult = click(data["google_resultX"], data["google_resultY"])
         moveRandomly = randomMouseMovement(data["google_resultX"], data["google_resultY"], data["google_resultX"], data["google_resultY"])
         clickWindow = click(data["google_resultX"], data["google_resultY"])
         scroll = scrollDown(data["num_scrolls"])
-        moveToCreate = findAndMoveOvershootPoint(self.currentX, self.currentY, data["createX"], data["createY"])
+        moveToCreate = moveToPoint(data["google_resultX"], data["google_resultY"], data["createX"], data["createY"])
         clickCreate = click(data["createX"], data["createY"])
-        moveToErstellen = findAndMoveOvershootPoint(data["createX"], data["createY"], data["erstellenX"], data["erstellenY"])
+        randomX = random.randint(data["createX"], data["createX"] + 200)
+        randomY = random.randint(data["createY"], data["createY"] + 200)
+        moveRandomly= randomMouseMovement(data["createX"], data["createY"], randomX, randomY)
+        moveToErstellen = moveToPoint(randomX, randomY, data["erstellenX"], data["erstellenY"])
         clickErstellen = click(data["erstellenX"], data["erstellenY"])
-        moveToPrivateNutzung = findAndMoveOvershootPoint(data["erstellenX"], data["erstellenY"], data["privateNutzungX"], data["privateNutzungY"])
+        moveToPrivateNutzung = moveToPoint(data["erstellenX"], data["erstellenY"], data["privateNutzungX"], data["privateNutzungY"])
+        moveToKind = moveToPoint(data["erstellenX"], data["erstellenY"], data["kindX"], data["kindY"])
+        moveToArbeit = moveToPoint(data["kindX"], data["kindY"], data["arbeitX"], data["arbeitY"])
+        pause = pauseAt(data["arbeitX"], data["arbeitY"])
+        moveBackToPrivateNutzung = moveToPoint(data["arbeitX"], data["arbeitY"], data["privateNutzungX"], data["privateNutzungY"])
         clickPrivateNutzung = click(data["privateNutzungX"], data["privateNutzungY"])
-        result = joinEvents([moveToGoogleResult, clickGoogleResult, moveRandomly, clickWindow, scroll, moveToCreate, clickCreate, moveToErstellen, clickErstellen, moveToPrivateNutzung, clickPrivateNutzung])
+        result = joinEvents([moveToGoogleResult, 
+                             clickGoogleResult, 
+                             moveRandomly, 
+                             clickWindow, 
+                             scroll, moveToCreate, clickCreate, 
+                             moveToErstellen, clickErstellen, moveToPrivateNutzung, moveToKind, moveToArbeit, pause, moveBackToPrivateNutzung, clickPrivateNutzung])
 
         with open (os.path.join(source_dir, "macroScripts\openPage.pmr"), "w") as f:
             f.write('{"events": [ \n')
@@ -59,7 +71,7 @@ class OpenPageRoutine(Routine):
         try:
             location = pyscreeze.locateCenterOnScreen(os.path.join(source_dir, 'elementImages\cookiesAblehnen.png'), confidence=0.4)
             pyautogui.click(location)
-            time.sleep(2)
+            time.sleep(5)
         except:
             print("cookies not required")
         barLocation = pyautogui.locateCenterOnScreen(os.path.join(source_dir, 'elementImages\searchBar.png'), confidence=0.4)
@@ -81,15 +93,16 @@ class EnterNameRoutine(Routine):
             data = json.load(f)
         randomTargetX = random.randint(0, maxX)
         randomTargetY = random.randint(0, maxY)
-        moveToFirstName = findAndMoveOvershootPoint(self.currentX, self.currentY, data["firstNameX"], data["firstNameY"])
+        moveToFirstName = moveToPoint(self.currentX, self.currentY, data["firstNameX"], data["firstNameY"])
         clickFirstName = click(data["firstNameX"], data["firstNameY"])
         typeFirstName = type(name[0])
         moveRandomly = randomMouseMovement(data["firstNameX"], data["firstNameY"], randomTargetX, randomTargetY)
-        moveToLastName = findAndMoveOvershootPoint(randomTargetX, randomTargetY, data["lastNameX"], data["lastNameY"])
+        moveToLastName = moveToPoint(randomTargetX, randomTargetY, data["lastNameX"], data["lastNameY"])
         clickLastName = click(data["lastNameX"], data["lastNameY"])
         typeLastName = type(name[1])
 
         result = joinEvents([moveToFirstName, clickFirstName, typeFirstName, moveRandomly, moveToLastName, clickLastName, typeLastName])
+
         with open (os.path.join(source_dir, "macroScripts\enterName.pmr"), "w") as f:
             f.write('{"events": [ \n')
             for event in result:
@@ -104,6 +117,7 @@ enterNameRout = EnterNameRoutine(openPagePos[0], openPagePos[1])
 enterNamePos = enterNameRout.generateMacroCodes()
 
 openPageRout.execute_routine()
+#enterNameRout.execute_routine()
 
 
 

@@ -19,7 +19,11 @@ openPageValues = {
     "erstellenX": 1252,
     "erstellenY": 692,
     "privateNutzungX": 1293,
-    "privateNutzungY": 744
+    "privateNutzungY": 744,
+    "kindX": 1317,
+    "kindY": 774,
+    "arbeitX": 1341, 
+    "arbeitY": 838
 }
 
 def updateEnterNameValues():
