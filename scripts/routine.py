@@ -116,14 +116,6 @@ openPagePos = openPageRout.generateMacroCodes()
 enterNameRout = EnterNameRoutine(openPagePos[0], openPagePos[1])
 enterNamePos = enterNameRout.generateMacroCodes()
 
-openPageRout.execute_routine()
-#enterNameRout.execute_routine()
-
-
-
-
-####test
-
 
 
 
