@@ -86,41 +86,6 @@ class OpenPageRoutine(Routine):
         subprocess.run([openPage_script])
     
 
-class EnterNameRoutine(Routine):
-    def generateMacroCodes(self):
-        name = generateName()
-        with open(os.path.join(source_dir, "persistentValues\enterName.json"), "r") as f:
-            data = json.load(f)
-        randomTargetX = random.randint(0, maxX)
-        randomTargetY = random.randint(0, maxY)
-        moveToFirstName = moveToPoint(self.currentX, self.currentY, data["firstNameX"], data["firstNameY"])
-        clickFirstName = click(data["firstNameX"], data["firstNameY"])
-        typeFirstName = type(name[0])
-        moveRandomly = randomMouseMovement(data["firstNameX"], data["firstNameY"], randomTargetX, randomTargetY)
-        moveToLastName = moveToPoint(randomTargetX, randomTargetY, data["lastNameX"], data["lastNameY"])
-        clickLastName = click(data["lastNameX"], data["lastNameY"])
-        typeLastName = type(name[1])
-
-        result = joinEvents([moveToFirstName, clickFirstName, typeFirstName, moveRandomly, moveToLastName, clickLastName, typeLastName])
-
-        with open (os.path.join(source_dir, "macroScripts\enterName.pmr"), "w") as f:
-            f.write('{"events": [ \n')
-            for event in result:
-                f.write(event + "\n")
-            f.write(']}')
-        return ([data["lastNameX"], data["lastNameY"]])
-
-openPageRout = OpenPageRoutine(0, 0)
-openPagePos = openPageRout.generateMacroCodes()
-
-enterNameRout = EnterNameRoutine(openPagePos[0], openPagePos[1])
-enterNamePos = enterNameRout.generateMacroCodes()
-
-
-
-
-
-
 
 
 
