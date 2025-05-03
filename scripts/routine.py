@@ -57,7 +57,7 @@ class OpenPageRoutine(Routine):
                              moveRandomly, 
                              clickWindow, 
                              scroll, moveToCreate, clickCreate, 
-                             moveToErstellen, clickErstellen, moveToPrivateNutzung, moveToKind, moveToArbeit, pause, moveBackToPrivateNutzung, clickPrivateNutzung])
+                             moveToErstellen, clickErstellen, moveToPrivateNutzung,clickPrivateNutzung])
 
         with open (os.path.join(source_dir, "macroScripts\openPage.pmr"), "w") as f:
             f.write('{"events": [ \n')
@@ -122,7 +122,7 @@ openPageRout.execute_routine()
 
 
 
-
+####test
 
 
 
