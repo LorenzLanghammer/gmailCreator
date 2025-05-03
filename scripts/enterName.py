@@ -1,6 +1,6 @@
 import requests
 import random
-from macro_gen import * 
+from scripts.gui_functions import * 
 
 base_url = "https://randomuser.me/api/"
 response = requests.get(f"{base_url}")

@@ -1,4 +1,4 @@
-from macro_gen import *
+from gui_functions import *
 from helper import *
 import json
 import os
@@ -31,41 +31,10 @@ class Routine:
         pass
 
 class OpenPageRoutine(Routine):
-    def generateMacroCodes(self):
-        with open(os.path.join(source_dir, "persistentValues\openPage.json"), "r") as f:
-            data = json.load(f)
-        moveToGoogleResult = moveToPoint(0, 0, data["google_resultX"], data["google_resultY"])
-        clickGoogleResult = click(data["google_resultX"], data["google_resultY"])
-        moveRandomly = randomMouseMovement(data["google_resultX"], data["google_resultY"], data["google_resultX"], data["google_resultY"])
-        clickWindow = click(data["google_resultX"], data["google_resultY"])
-        scroll = scrollDown(data["num_scrolls"])
-        moveToCreate = moveToPoint(data["google_resultX"], data["google_resultY"], data["createX"], data["createY"])
-        clickCreate = click(data["createX"], data["createY"])
-        randomX = random.randint(data["createX"], data["createX"] + 200)
-        randomY = random.randint(data["createY"], data["createY"] + 200)
-        moveRandomly= randomMouseMovement(data["createX"], data["createY"], randomX, randomY)
-        moveToErstellen = moveToPoint(randomX, randomY, data["erstellenX"], data["erstellenY"])
-        clickErstellen = click(data["erstellenX"], data["erstellenY"])
-        moveToPrivateNutzung = moveToPoint(data["erstellenX"], data["erstellenY"], data["privateNutzungX"], data["privateNutzungY"])
-        moveToKind = moveToPoint(data["erstellenX"], data["erstellenY"], data["kindX"], data["kindY"])
-        moveToArbeit = moveToPoint(data["kindX"], data["kindY"], data["arbeitX"], data["arbeitY"])
-        pause = pauseAt(data["arbeitX"], data["arbeitY"])
-        moveBackToPrivateNutzung = moveToPoint(data["arbeitX"], data["arbeitY"], data["privateNutzungX"], data["privateNutzungY"])
-        clickPrivateNutzung = click(data["privateNutzungX"], data["privateNutzungY"])
-        result = joinEvents([moveToGoogleResult, 
-                             clickGoogleResult, 
-                             moveRandomly, 
-                             clickWindow, 
-                             scroll, moveToCreate, clickCreate, 
-                             moveToErstellen, clickErstellen, moveToPrivateNutzung,clickPrivateNutzung])
-
-        with open (os.path.join(source_dir, "macroScripts\openPage.pmr"), "w") as f:
-            f.write('{"events": [ \n')
-            for event in result:
-                f.write(event + "\n")
-            f.write(']}')
-        return ([data["privateNutzungX"], data["privateNutzungY"]])
+   
     def execute_routine(self):
+        with open (os.path.join(source_dir, "persistentValues\openPage.json")) as f:
+            data = json.load(f)
         webbrowser.get('firefox').open("https://www.google.com")
         time.sleep(3)
         try:
@@ -82,13 +51,15 @@ class OpenPageRoutine(Routine):
         pyautogui.write("create gmail account", interval=0.1)
         pyautogui.press("enter")
         time.sleep(1)
-        openPage_script = os.path.join(source_dir, "ahkFiles\openPage.exe")
-        subprocess.run([openPage_script])
-    
+        moveToPoint(0, 0, data["google_resultX"], data["google_resultY"])
+        pauseAt()
+        pyautogui.click()
+        pauseAt()
 
 
+openPageRout = OpenPageRoutine(0, 0)
 
-
+openPageRout.execute_routine()
 
 
 

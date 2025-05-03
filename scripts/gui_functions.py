@@ -23,8 +23,7 @@ def moveToPoint(start_x, start_y, dest_x, dest_y):
     W_0=3
     M_0=15
     D_0=12
-    
-    events = []
+
     points = []
 
     current_x,current_y = start_x,start_y
@@ -48,8 +47,8 @@ def moveToPoint(start_x, start_y, dest_x, dest_y):
             v_clip = M_0/2 + np.random.random()*M_0/2
             v_x = (v_x/v_mag) * v_clip
             v_y = (v_y/v_mag) * v_clip
-        start_x += v_x
-        start_y += v_y
+        start_x += 2*v_x
+        start_y += 2*v_y
         move_x = int(np.round(start_x))
         move_y = int(np.round(start_y))
         if current_x != move_x or current_y != move_y:
@@ -57,13 +56,7 @@ def moveToPoint(start_x, start_y, dest_x, dest_y):
             points.append([move_x, move_y])
 
     for i, point in enumerate(points):
-        event = ""
-        if (i == len(points) - 1):
-            event = f'{{"type": "cursorMove","x": {point[0]},"y": {point[1]},"timestamp": {generateTimeOffset()}}}'
-        else:
-            event = f'{{"type": "cursorMove","x": {point[0]},"y": {point[1]},"timestamp": {generateTimeOffset()}}},'
-        events.append(event)
-    return events
+        pyautogui.moveTo(point[0], point[1], duration=random.uniform(0.001, 0.02))
 
 
 def generateTimeOffset():
@@ -84,28 +77,23 @@ def joinEvents(eventsList):
 
 
 
-    
+
 
 def randomMouseMovement(currentX, currentY, targetX, targetY):
     num_points = random.randint(2, 4) + 1
-    events = []
 
     startX = currentX
     startY = currentY
     newX = 0
     newY = 0
-
     for i in range(num_points):
-        newX = random.randint(0, maxX)
-        newY = random.randint(0, maxY)
-        randomMovement = moveToPoint(startX, startY, newX, newY)
-        startX = newX
-        startY = newY
-        events.append(randomMovement)
-    lastMovement = moveToPoint(newX, newY, targetX, targetY)
-    events.append(lastMovement)
-    return joinEvents(events)
-
+        if (i == num_points - 1):
+            
+            newX = random.randint(0, maxX)
+            newY = random.randint(0, maxY)
+            moveToPoint(startX, startY, newX, newY)
+   
+ 
 
 def type(text):
     events = []
@@ -125,8 +113,6 @@ def type(text):
 
 def click(x, y):
     events = []
-    events.append(f'{{"type":"leftClickEvent","x":{x},"y":{y},"timestamp":0.09622859954833984,"pressed":true}},')
-    events.append(f'{{"type":"leftClickEvent","x":{x},"y":{y},"timestamp":0.09622859954833984,"pressed":false}}')
     return events
 
 
@@ -140,6 +126,4 @@ def scrollDown(num_scrolls):
     return events
 
 def pauseAt(x, y):
-    events = []
-    events.append(f'{{"type": "cursorMove","x": {x},"y": {y},"timestamp": {0.9}}}')
-    return events
+    pyautogui.sleep(random.uniform(0.1, 3))
