@@ -9,4 +9,5 @@ def generateName():
         person = data["results"][0]
         firstName = person["name"]["first"]
         lastName = person["name"]["last"]
-    return firstName, lastName
+        gender = person["gender"]
+    return firstName, lastName, gender

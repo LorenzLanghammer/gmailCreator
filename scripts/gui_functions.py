@@ -3,6 +3,7 @@ import os
 import webbrowser
 import random
 import math
+import time
 import numpy as np
 sqrt3 = np.sqrt(3)
 sqrt5 = np.sqrt(5)
@@ -18,7 +19,7 @@ maxX = 1901
 maxY = 998
 
 
-def moveToPoint(start_x, start_y, dest_x, dest_y):
+def moveToPoint(start_x, start_y, dest_x, dest_y, speed):
     G_0=9
     W_0=3
     M_0=15
@@ -47,8 +48,9 @@ def moveToPoint(start_x, start_y, dest_x, dest_y):
             v_clip = M_0/2 + np.random.random()*M_0/2
             v_x = (v_x/v_mag) * v_clip
             v_y = (v_y/v_mag) * v_clip
-        start_x += 2*v_x
-        start_y += 2*v_y
+        dynamic_speed = speed * min(1.0, dist / D_0)  # D_0 is your decay threshold
+        start_x += dynamic_speed*v_x
+        start_y += dynamic_speed*v_y
         move_x = int(np.round(start_x))
         move_y = int(np.round(start_y))
         if current_x != move_x or current_y != move_y:
@@ -56,7 +58,7 @@ def moveToPoint(start_x, start_y, dest_x, dest_y):
             points.append([move_x, move_y])
 
     for i, point in enumerate(points):
-        pyautogui.moveTo(point[0], point[1], duration=random.uniform(0.001, 0.02))
+        pyautogui.moveTo(point[0], point[1], duration=random.uniform(1/(1000*speed), 1/(100*speed)))
 
 
 def generateTimeOffset():
@@ -64,23 +66,8 @@ def generateTimeOffset():
 
 
 
-
-def joinEvents(eventsList):
-    result = []
-    for i, events in enumerate(eventsList):
-        for j, event in enumerate(events):
-            if (i != len(eventsList) - 1 and j == len(eventsList[i]) - 1):
-                result.append(event + ",")
-            else:
-                result.append(event)
-    return result
-
-
-
-
-
 def randomMouseMovement(currentX, currentY, targetX, targetY):
-    num_points = random.randint(2, 4) + 1
+    num_points = random.randint(0, 3)
 
     startX = currentX
     startY = currentY
@@ -88,12 +75,15 @@ def randomMouseMovement(currentX, currentY, targetX, targetY):
     newY = 0
     for i in range(num_points):
         if (i == num_points - 1):
-            
+            moveToPoint(startX, startY, targetY, targetY, 4)
+        else:
             newX = random.randint(0, maxX)
             newY = random.randint(0, maxY)
-            moveToPoint(startX, startY, newX, newY)
+            moveToPoint(startX, startY, newX, newY, 4)
+            startX = newX
+            startY = newY
    
- 
+
 
 def type(text):
     events = []
@@ -117,13 +107,16 @@ def click(x, y):
 
 
 def scrollDown(num_scrolls):
-    events = []
-    for i in range(num_scrolls):
-        if (i == num_scrolls - 1):
-            events.append(f'{{"type":"scrollEvent","dx":0,"dy":-1,"timestamp":{generateTimeOffset()}}}')
-        else: 
-            events.append(f'{{"type":"scrollEvent","dx":0,"dy":-1,"timestamp":{generateTimeOffset()}}},')
-    return events
+    for _ in range(num_scrolls):
+        pyautogui.scroll(-100)
+        time.sleep(random.uniform(0.09, 0.4))
 
-def pauseAt(x, y):
+
+def pauseAt():
     pyautogui.sleep(random.uniform(0.1, 3))
+
+def type(text):
+    for char in text:
+        pyautogui.write(char)
+        time.sleep(random.uniform(0.05, 0.25))
+
