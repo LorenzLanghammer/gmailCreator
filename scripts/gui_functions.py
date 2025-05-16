@@ -5,6 +5,9 @@ import random
 import math
 import time
 import numpy as np
+import zendriver as zd
+import asyncio
+
 sqrt3 = np.sqrt(3)
 sqrt5 = np.sqrt(5)
 
@@ -18,7 +21,12 @@ timeOffsetUpperBound = 0.02896112442016602
 maxX = 1901
 maxY = 998
 
-
+class ScreenPosition:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+        
+        
 def moveToPoint(start_x, start_y, dest_x, dest_y, speed):
     G_0=9
     W_0=3
@@ -67,7 +75,7 @@ def generateTimeOffset():
 
 
 def randomMouseMovement(currentX, currentY, targetX, targetY):
-    num_points = random.randint(0, 3)
+    num_points = random.randint(2, 5)
 
     startX = currentX
     startY = currentY
@@ -75,31 +83,54 @@ def randomMouseMovement(currentX, currentY, targetX, targetY):
     newY = 0
     for i in range(num_points):
         if (i == num_points - 1):
-            moveToPoint(startX, startY, targetY, targetY, 4)
+            moveToPoint(startX, startY, targetX, targetY, 4)
         else:
             newX = random.randint(0, maxX)
             newY = random.randint(0, maxY)
             moveToPoint(startX, startY, newX, newY, 4)
             startX = newX
             startY = newY
+
+async def get_position_by_selector(text, tab):
+    await tab.wait_for_ready_state("complete", timeout=10)
+    try:
+        element = await tab.select(text)
+    except:
+        print("could not find element")
+        return
+    
+    position = await element.get_position(abs=False)
+    if position.width > 25:
+        return ScreenPosition((position.x + 30) + position.width / 2, (position.y + 80) + position.height / 2)
+    else:
+        return ScreenPosition((position.x + 15), position.y + 90)
+
+
+async def get_position_by_text(text, tab):
+    await tab.wait_for_ready_state("complete", timeout=10)
+    try:
+        element = await tab.find_element_by_text(text, best_match=True)
+        if not element:
+            return
+    except:
+        print("could not find element")
+        return
+    position = await element.get_position(abs=False)
+    return ScreenPosition((position.x + 35) + position.width / 2, (position.y + 85) + position.height / 2)
    
 
 
-def type(text):
-    events = []
-    for i, char in enumerate(text):
-        if (i == len(text) - 1):
-            event = f'{{"type":"keyboardEvent","key":"{char}","timestamp":{generateTimeOffset()},"pressed":true}}, \n'
-            events.append(event)
-            event = f'{{"type":"keyboardEvent","key":"{char}","timestamp":{generateTimeOffset()},"pressed":false}} \n'
-            events.append(event)
-        else:
-            event = f'{{"type":"keyboardEvent","key":"{char}","timestamp":{generateTimeOffset()},"pressed":true}}, \n'
-            events.append(event)
-            event = f'{{"type":"keyboardEvent","key":"{char}","timestamp":{generateTimeOffset()},"pressed":false}}, \n'
-            events.append(event)
+async def is_element_on_page(selector, tab):
+    await tab.wait_for_ready_state("complete", timeout=10)
 
-    return events
+    try:
+        element = await tab.select(selector)
+    except:
+        print("element is not on page")
+        return False
+    return True
+
+
 
 def click(x, y):
     events = []
