@@ -45,15 +45,36 @@ class Routine:
     async def executeRoutine(self):
         pass
 
+class EnterCredentials_routine(Routine):
+    def __init__(self, tab, proxy_username, proxy_password):
+        super().__init__(tab)
+        self.proxy_username = proxy_username
+        self.proxy_password = proxy_password
+
+    async def executeRoutine(self):
+        moveToPoint(917, 222, 2)
+        pyautogui.click()
+        pyautogui.write(self.proxy_username)
+
+        moveToPoint(969, 276, 2)
+        pyautogui.click()
+        pyautogui.write(self.proxy_password)
+        pyautogui.press("enter")
+    
+        moveToPoint(954, 339, 2)
+        pyautogui.click()
+
+        moveToPoint(1726, 62, 2)
+        pag.click()
 
 class SearchPage_routine(Routine):
     async def executeRoutine(self):
         accept_position = await get_position_by_selector("#L2AGLb", self.tab)
-        moveToPoint(pag.position().x, pag.position().y , accept_position.x, accept_position.y, 2)
+        moveToPoint( accept_position.x, accept_position.y, 2)
         pag.click()
 
         searchBar_position = await get_position_by_selector('[aria-label="Suche"]', self.tab)
-        moveToPoint(pag.position().x, pag.position().y, searchBar_position.x, searchBar_position.y, 2)
+        moveToPoint(searchBar_position.x, searchBar_position.y, 2)
         pauseAt()
         pag.click()
 
@@ -63,18 +84,18 @@ class SearchPage_routine(Routine):
         await self.tab.wait_for_ready_state("complete", timeout=10)
         googleResult_position = await get_position_by_selector("h3.LC20lb", self.tab)
         pauseAt()
-        moveToPoint(pag.position().x, pag.position().y, googleResult_position.x, googleResult_position.y, 2)
+        moveToPoint(googleResult_position.x, googleResult_position.y, 2)
         pag.click()
 
 
 
 class GotoPage_routine(Routine):
     async def executeRoutine(self):
-        randomMouseMovement(pag.position().x, pag.position().y, random.uniform(100, 400), random.uniform(100, 500))
+        randomMouseMovement(random.uniform(100, 400), random.uniform(100, 500))
         scrollDown(random.randint(5, 8))
 
         buttonLocation = await get_position_by_text("Create an account", self.tab)
-        moveToPoint(pag.position().x, pag.position().y, buttonLocation.x, buttonLocation.y, 2)
+        moveToPoint(buttonLocation.x, buttonLocation.y, 2)
         pag.click()
 
 
@@ -84,19 +105,19 @@ class SelectAccountType_routine(Routine):
     
         await asyncio.sleep(1)
         erstellen_position = await get_position_by_text('Konto erstellen', self.tab)        
-        moveToPoint(pag.position().x, pag.position().y, erstellen_position.x, erstellen_position.y, 3)
+        moveToPoint(erstellen_position.x, erstellen_position.y, 3)
         pag.click()
 
         private_nutzung_position = await get_position_by_selector('[jsname="K4r5Ff"]', self.tab)
-        moveToPoint(pag.position().x, pag.position().y, private_nutzung_position.x, private_nutzung_position.y, 3)
+        moveToPoint(private_nutzung_position.x, private_nutzung_position.y, 3)
 
         kind_position = await get_position_by_selector('[jsname="IfUHnf"]', self.tab)
-        moveToPoint(pag.position().x, pag.position().y, kind_position.x, kind_position.y, 3)
+        moveToPoint(kind_position.x, kind_position.y, 3)
 
         arbeit_position = await get_position_by_selector('[jsname="iAUJgf"]', self.tab)
-        moveToPoint(pag.position().x, pag.position().y, arbeit_position.x, arbeit_position.y, 3)
-        moveToPoint(pag.position().x, pag.position().y, kind_position.x, kind_position.y, 3)
-        moveToPoint(pag.position().x, pag.position().y, private_nutzung_position.x, private_nutzung_position.y, 3)
+        moveToPoint(arbeit_position.x, arbeit_position.y, 3)
+        moveToPoint(kind_position.x, kind_position.y, 3)
+        moveToPoint(private_nutzung_position.x, private_nutzung_position.y, 3)
         pag.click()
 
 
@@ -107,17 +128,17 @@ class EnterName_routine(Routine):
         lastName = name[1]
 
         first_name_position = await get_position_by_selector("#firstName", self.tab)
-        moveToPoint(pag.position().x, pag.position().y,first_name_position.x, first_name_position.y, 2)
+        moveToPoint(first_name_position.x, first_name_position.y, 2)
         pag.click()
         type("test")
 
         last_name_position = await get_position_by_selector("#lastName", self.tab)
-        moveToPoint(pag.position().x, pag.position().y, last_name_position.x, last_name_position.y, 2)
+        moveToPoint(last_name_position.x, last_name_position.y, 2)
         pag.click()
         type("test")
 
         weiter_button_position = await get_position_by_selector('[jsname="V67aGc"]', self.tab)
-        moveToPoint(pag.position().x, pag.position().y, weiter_button_position.x, weiter_button_position.y, 2)
+        moveToPoint(weiter_button_position.x, weiter_button_position.y, 2)
         pag.click()
 
 
@@ -131,47 +152,47 @@ class EnterDateAndGender_routine(Routine):
 
 
         day_position = await get_position_by_selector("#day", self.tab)
-        moveToPoint(pag.position().x, pag.position().y, day_position.x, day_position.y, 2)
+        moveToPoint(day_position.x, day_position.y, 2)
         pag.click()
         pauseAt()
         type(f'{day}')
         pauseAt()
 
         month_position = await get_position_by_selector(".VfPpkd-aPP78e", self.tab)
-        moveToPoint(pag.position().x, pag.position().y, month_position.x, month_position.y, 2)
+        moveToPoint(month_position.x, month_position.y, 2)
         pag.click()
         january_position = await get_position_by_selector('.VfPpkd-xl07Ob-XxIAqe-OWXEXe-FNFY6c > ul:nth-child(1) > li:nth-child(2)', self.tab)
-        moveToPoint(pag.position().x, pag.position().y, january_position.x, january_position.y, 2)
+        moveToPoint(january_position.x, january_position.y, 2)
 
         if month >= 11:
             scrollDown(3)
         
         selected_month_position = await get_position_by_selector(f'.VfPpkd-xl07Ob-XxIAqe-OWXEXe-FNFY6c > ul:nth-child(1) > li:nth-child({month + 1})', self.tab)
-        moveToPoint(pag.position().x, pag.position().y, selected_month_position.x, selected_month_position.y, 2)
+        moveToPoint(selected_month_position.x, selected_month_position.y, 2)
         pag.click()
 
         year_position = await get_position_by_selector('#year', self.tab)
-        moveToPoint(pag.position().x, pag.position().y, year_position.x, year_position.y, 2)
+        moveToPoint(year_position.x, year_position.y, 2)
         pag.click()
         pauseAt()
         type(f'{year}')
         
         gender_position = await get_position_by_selector('#gender', self.tab)
-        moveToPoint(pag.position().x, pag.position().y, gender_position.x, gender_position.y, 2)
+        moveToPoint(gender_position.x, gender_position.y, 2)
         pag.click()
 
         female_position = await get_position_by_selector('.VfPpkd-xl07Ob-XxIAqe-OWXEXe-FNFY6c > ul:nth-child(1) > li:nth-child(2)', self.tab)
         male_position = await get_position_by_selector('.VfPpkd-xl07Ob-XxIAqe-OWXEXe-FNFY6c > ul:nth-child(1) > li:nth-child(3)', self.tab)
 
         if (gender == "male"):
-            moveToPoint(pag.position().x, pag.position().y, male_position.x, male_position.y, 2)
+            moveToPoint(male_position.x, male_position.y, 2)
         else:
-            moveToPoint(pag.position().x, pag.position().y, female_position.x, female_position.y, 2)
+            moveToPoint(female_position.x, female_position.y, 2)
         
         pag.click()
 
         weiter_position = await get_position_by_selector('#birthdaygenderNext', self.tab)
-        moveToPoint(pag.position().x, pag.position().y, weiter_position.x, weiter_position.y, 2)
+        moveToPoint(weiter_position.x, weiter_position.y, 2)
         pag.click()
 
 
@@ -179,11 +200,11 @@ class EnterDateAndGender_routine(Routine):
 class SelectAddressType_routine(Routine):
     async def executeRoutine(self):
         adresse_erstellen_position = await get_position_by_selector('[jsname="ornU0b"]', self.tab)
-        moveToPoint(pag.position().x, pag.position().y, adresse_erstellen_position.x, adresse_erstellen_position.y, 2)
+        moveToPoint(adresse_erstellen_position.x, adresse_erstellen_position.y, 2)
         pag.click()
 
         weiter_position = await get_position_by_selector('.VfPpkd-dgl2Hf-ppHlrf-sM5MNb', self.tab)
-        moveToPoint(pag.position().x, pag.position().y, weiter_position.x, weiter_position.y, 2)
+        moveToPoint(weiter_position.x, weiter_position.y, 2)
         pag.click()
         pauseAt()
 
@@ -195,7 +216,7 @@ class SelectAddress_routine(Routine):
         name_field_position = await get_position_by_text('Nutzername', self.tab)
         if name_field_position:
             print("found address field")
-            moveToPoint(pag.position().x, pag.position().y, name_field_position.x + 20, name_field_position.y + 20, 2)
+            moveToPoint(name_field_position.x + 20, name_field_position.y + 20, 2)
             pag.click()
             pauseAt()
             type(generateEmail(name[0], name[1], 0))
@@ -203,7 +224,7 @@ class SelectAddress_routine(Routine):
 
         else:
             print("did not find address field")
-            moveToPoint(pag.position().x, pag.position().y, 993, 451, 2)
+            moveToPoint(993, 451, 2)
             pag.click()
 
 
@@ -213,34 +234,64 @@ class EnterPassword_routine(Routine):
         password = generate_password(random.randint(8, 15))
         
         password_position = await get_position_by_selector("#passwd", self.tab)
-        moveToPoint(pag.position().x, pag.position().y, password_position.x, password_position.y, 2)
+        moveToPoint(password_position.x, password_position.y, 2)
         pag.click()
         type(password)
 
         confirm_position = await get_position_by_selector("#confirm-passwd", self.tab)
-        moveToPoint(pag.position().x, pag.position().y, confirm_position.x, confirm_position.y, 2)
+        moveToPoint(confirm_position.x, confirm_position.y, 2)
         pag.click()
         type(password)
         pauseAt()
 
         weiter_position = await get_position_by_selector("#createpasswordNext", self.tab)
-        moveToPoint(pag.position().x, pag.position().y, weiter_position.x, weiter_position.y, 2)
+        moveToPoint(weiter_position.x, weiter_position.y, 2)
         pag.click()
         pauseAt()
+
+
+class EnterPhoneNumber_routine(Routine):
+    def __init__(self, tab, number):
+        super.__init__(tab)
+        self.number = number
+
+    async def executeRoutine(self):            
+        number_field_position = get_position_by_selector("#phoneNumberId", self.tab)
+        moveToPoint(number_field_position.x, number_field_position.y, 2)
+        pag.click()
+        phone = getPhoneNumber()
+        if phone:
+            type(phone.number)
+        else:
+            print("could not get phone number") #Todo: handle error
+
+        
+
+
 
 
 '''
 with open (os.path.join(source_dir, "persistentValues\selectAddress.json")) as f:
     data = json.load(f)
 if(random.randint(0, 1) == 0):
-    moveToPoint(pag.position().x, pag.position().y, data["firstAddressX"], data["firstAddressY"], 2)
+    moveToPoint(data["firstAddressX"], data["firstAddressY"], 2)
     pag.click()
 else: 
-    moveToPoint(pag.position().x, pag.position().y, data["secondAddressX"], data["secondAddressY"], 2)
+    moveToPoint(data["secondAddressX"], data["secondAddressY"], 2)
     pag.click()
     pauseAt()
-moveToPoint(pag.position().x, pag.position().y, data["weiterButtonX"], data["weiterButtonY"], 2)
+moveToPoint(data["weiterButtonX"], data["weiterButtonY"], 2)
 pauseAt()
 
 '''
+
+
+
+
+
+
+
+
+
+
 

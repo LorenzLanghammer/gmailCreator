@@ -27,7 +27,10 @@ class ScreenPosition:
         self.y = y
         
         
-def moveToPoint(start_x, start_y, dest_x, dest_y, speed):
+def moveToPoint(dest_x, dest_y, speed):
+    start_x = pyautogui.position().x
+    start_y = pyautogui.position().y
+
     G_0=9
     W_0=3
     M_0=15
