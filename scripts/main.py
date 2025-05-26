@@ -1,4 +1,3 @@
-
 from gui_functions import *
 from helper import *
 import json
@@ -6,11 +5,10 @@ import os
 from routine import *
 from selenium import webdriver
 import asyncio
-from playwright.async_api import async_playwright
 import zendriver as zd
 from zendriver.cdp.browser import Bounds, WindowState
-from requests.auth import HTTPProxyAuth
-import base64
+from country_values import *
+from fiveSim import *
 
 
 month_days = {
@@ -44,43 +42,10 @@ month_positions = {
 }
 
 
-
 source_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 spoofed_timezone = "Europe/London"
 spoofed_offset_minutes = -120
 
-
-timezone_spoof_script = f"""
-(() => {{
-    const spoofedTimeZone = {spoofed_timezone};
-    const spoofedOffsetMinutes = 0;
-    const originalResolvedOptions = Intl.DateTimeFormat.prototype.resolvedOptions;
-    Intl.DateTimeFormat.prototype.resolvedOptions = function() {{
-        const options = originalResolvedOptions.apply(this, arguments);
-        options.timeZone = spoofedTimeZone;
-        return options;
-    }};
-
-    const originalGetTimezoneOffset = Date.prototype.getTimezoneOffset;
-    Date.prototype.getTimezoneOffset = function() {{
-        return spoofedOffsetMinutes;
-    }};
-
-    const offsetMs = spoofedOffsetMinutes * 60 * 1000;
-    const OriginalDate = Date;
-    function FakeDate(...args) {{
-        if (args.length === 0) {{
-            return new OriginalDate(OriginalDate.now() - offsetMs);
-        }}
-        return new OriginalDate(...args);
-    }}
-    FakeDate.UTC = OriginalDate.UTC;
-    FakeDate.now = () => OriginalDate.now() - offsetMs;
-    FakeDate.parse = OriginalDate.parse;
-    FakeDate.prototype = OriginalDate.prototype;
-    window.Date = FakeDate;
-}})();
-"""
 
 proxy_host = "geo.iproyal.com"
 proxy_port = 12321
@@ -91,9 +56,44 @@ extension_path = os.path.join(source_dir, "extensions/WebRTC-Control")
 
 async def main():
 
+    country = getCountry().upper()
+    spoofed_timezone = CountryCode[country].value
+    spoofed_language = Language[country].value
+
+    timezone_spoof_script = f"""
+        (() => {{
+            const spoofedTimeZone = {spoofed_timezone};
+            const originalResolvedOptions = Intl.DateTimeFormat.prototype.resolvedOptions;
+            Intl.DateTimeFormat.prototype.resolvedOptions = function() {{
+                const options = originalResolvedOptions.apply(this, arguments);
+                options.timeZone = spoofedTimeZone;
+                return options;
+            }};
+
+            const originalGetTimezoneOffset = Date.prototype.getTimezoneOffset;
+            Date.prototype.getTimezoneOffset = function() {{
+                return {spoofed_offset_minutes};
+            }};
+
+            const offsetMs = {spoofed_offset_minutes} * 60 * 1000;
+            const OriginalDate = Date;
+            function FakeDate(...args) {{
+                if (args.length === 0) {{
+                    return new OriginalDate(OriginalDate.now() - offsetMs);
+                }}
+                return new OriginalDate(...args);
+            }}
+            FakeDate.UTC = OriginalDate.UTC;
+            FakeDate.now = () => OriginalDate.now() - offsetMs;
+            FakeDate.parse = OriginalDate.parse;
+            FakeDate.prototype = OriginalDate.prototype;
+            window.Date = FakeDate;
+        }})();
+        """
+
     browser = await zd.start(
         browser_args=[ 
-            "--lang=en-gb",
+            f"--lang={spoofed_language}",
             f"--proxy-server={proxy}",
             f"--load-extension={extension_path}",
             '--disable-webgl',

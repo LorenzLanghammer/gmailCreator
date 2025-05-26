@@ -29,6 +29,34 @@ class CountryCode(Enum):
     SWEDEN = "+46"
     SWITZERLAND = "+41"
 
+class Language(Enum):
+    AUSTRIA = "de-AT"
+    BELGIUM = "nl-BE"
+    CROATIA = "hr-HR"
+    CYPRUS = "el-CY"
+    CZECH = "cs-CZ"
+    DENMARK = "da-DK"
+    ENGLAND = "en-GB"
+    FINLAND = "fi-FI"
+    FRANCE = "fr-FR"
+    GERMANY = "de-DE"
+    GREECE = "el-GR"
+    HUNGARY = "hu-HU"
+    IRELAND = "en-IE"
+    ITALY = "it-IT"
+    LATVIA = "lv-LV"
+    LITHUANIA = "lt-LT"
+    NETHERLANDS = "nl-NL"
+    NORWAY = "no-NO"
+    POLAND = "pl-PL"
+    ROMANIA = "ro-RO"
+    SLOVAKIA = "sk-SK"
+    SLOVENIA = "sl-SI"
+    SPAIN = "es-ES"
+    SERBIA = "sr-RS"
+    SWEDEN = "sv-SE"
+    SWITZERLAND = "de-CH"
+
 
 class Country(Enum):
     AUSTRIA = "austria"
@@ -58,4 +86,33 @@ class Country(Enum):
     SWEDEN = "sweden"
     SWITZERLAND = "switzerland"
 
+
+
+class CountryTimezone(Enum):
+    AUSTRIA = "Europe/Vienna"
+    BELGIUM = "Europe/Brussels"
+    CROATIA = "Europe/Zagreb"
+    CYPRUS = "Asia/Nicosia"  # Not Europe/, but correct for Cyprus
+    CZECH = "Europe/Prague"
+    DENMARK = "Europe/Copenhagen"
+    ENGLAND = "Europe/London"
+    FINLAND = "Europe/Helsinki"
+    FRANCE = "Europe/Paris"
+    GERMANY = "Europe/Berlin"
+    GREECE = "Europe/Athens"
+    HUNGARY = "Europe/Budapest"
+    IRELAND = "Europe/Dublin"
+    ITALY = "Europe/Rome"
+    LATVIA = "Europe/Riga"
+    LITHUANIA = "Europe/Vilnius"
+    NETHERLANDS = "Europe/Amsterdam"
+    NORWAY = "Europe/Oslo"
+    POLAND = "Europe/Warsaw"
+    ROMANIA = "Europe/Bucharest"
+    SLOVAKIA = "Europe/Bratislava"
+    SLOVENIA = "Europe/Ljubljana"
+    SPAIN = "Europe/Madrid"
+    SERBIA = "Europe/Belgrade"
+    SWEDEN = "Europe/Stockholm"
+    SWITZERLAND = "Europe/Zurich"
 

@@ -26,7 +26,7 @@ class ScreenPosition:
         self.x = x
         self.y = y
         
-        
+
 def moveToPoint(dest_x, dest_y, speed):
     start_x = pyautogui.position().x
     start_y = pyautogui.position().y
@@ -153,4 +153,6 @@ def type(text):
     for char in text:
         pyautogui.write(char)
         time.sleep(random.uniform(0.05, 0.25))
+
+scrollDown(4)
 

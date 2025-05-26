@@ -5,6 +5,7 @@ import pyscreeze
 from helper import*
 import zendriver as zd
 import asyncio
+from fiveSim import *
 
 
 
@@ -251,11 +252,39 @@ class EnterPassword_routine(Routine):
 
 
 class EnterPhoneNumber_routine(Routine):
-    def __init__(self, tab, number):
-        super.__init__(tab)
-        self.number = number
 
-    async def executeRoutine(self):            
+    async def executeRoutine(self):      
+
+        url = f"https://5sim.net/v1/user/buy/activation/{country}/any/google?"
+
+        headers = {
+            "Authorization": f"Bearer {api_key}",
+            "Accept": "application/json"
+        }
+
+        response = requests.get(url, headers=headers)
+        print("Status:", response.status_code)
+        print("Response:", response.text)
+
+        country_upper = best_offer['country'].upper()
+        country_code = CountryCode[country_upper].value
+
+        try:
+            fullResponse = response.json()
+        except:
+            print("could not get number")
+        
+        phone = fullResponse['phone']
+        id = fullResponse['id']
+
+        try:
+            country_code = CountryCode[country.upper()].value
+            number = (phone[len(country_code):] if phone.startswith(country_code) else phone)
+        except KeyError:
+            print("could not format number")
+
+
+
         number_field_position = get_position_by_selector("#phoneNumberId", self.tab)
         moveToPoint(number_field_position.x, number_field_position.y, 2)
         pag.click()
