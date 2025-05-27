@@ -167,7 +167,7 @@ class EnterDateAndGender_routine(Routine):
 
         if month >= 11:
             scrollDown(3)
-        
+
         selected_month_position = await get_position_by_selector(f'.VfPpkd-xl07Ob-XxIAqe-OWXEXe-FNFY6c > ul:nth-child(1) > li:nth-child({month + 1})', self.tab)
         moveToPoint(selected_month_position.x, selected_month_position.y, 2)
         pag.click()
@@ -189,7 +189,7 @@ class EnterDateAndGender_routine(Routine):
             moveToPoint(male_position.x, male_position.y, 2)
         else:
             moveToPoint(female_position.x, female_position.y, 2)
-        
+
         pag.click()
 
         weiter_position = await get_position_by_selector('#birthdaygenderNext', self.tab)
@@ -252,49 +252,40 @@ class EnterPassword_routine(Routine):
 
 
 class EnterPhoneNumber_routine(Routine):
+    def __init__(self, tab, country):
+        super().__init__(tab)
+        self.country = country
 
-    async def executeRoutine(self):      
-
-        url = f"https://5sim.net/v1/user/buy/activation/{country}/any/google?"
-
-        headers = {
-            "Authorization": f"Bearer {api_key}",
-            "Accept": "application/json"
-        }
-
-        response = requests.get(url, headers=headers)
-        print("Status:", response.status_code)
-        print("Response:", response.text)
-
-        country_upper = best_offer['country'].upper()
-        country_code = CountryCode[country_upper].value
-
-        try:
-            fullResponse = response.json()
-        except:
-            print("could not get number")
-        
-        phone = fullResponse['phone']
-        id = fullResponse['id']
-
-        try:
-            country_code = CountryCode[country.upper()].value
-            number = (phone[len(country_code):] if phone.startswith(country_code) else phone)
-        except KeyError:
-            print("could not format number")
-
-
+    async def executeRoutine(self):
+        enter_successfull = False
+      
 
         number_field_position = get_position_by_selector("#phoneNumberId", self.tab)
         moveToPoint(number_field_position.x, number_field_position.y, 2)
         pag.click()
-        phone = getPhoneNumber()
-        if phone:
-            type(phone.number)
-        else:
-            print("could not get phone number") #Todo: handle error
-
         
+        async def typeNumber():
+            while (enter_successfull == False):
+                phone = getPhoneNumber(self.country)
+                    
+                try:
+                    type(phone.number)
+                    pag.press("Enter")
+                except: 
+                    print("could not get phone number")
+
+                while (True):
+                    code = checkStatus(phone.id)
+                    if(code):
+                        
+                        
+
+
+
+
+
+
+
 
 
 

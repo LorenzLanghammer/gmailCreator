@@ -20,38 +20,8 @@ class Number:
         self.id = id
         self.number = number
 
-async def getPhoneNumber():
 
-    url = f"https://5sim.net/v1/guest/prices"
-    response = requests.get(url)
-    data = response.json()
-
-    lowest_price = float('inf')
-    best_offer = None
-
-    for country_name, services in data.items():
-        if country_name in country_list:
-            for service, vendors in services.items():
-                if (service == target_service):
-                    for vendor, info in vendors.items():
-                        cost = info.get('cost', float('inf'))
-                        if cost <= max_price and info.get('count', 0) > 0:
-                            if any(info.get(rate, 0) >= min_success_rate for rate in rate_fields):
-                                if cost < lowest_price:
-                                    lowest_price = cost
-                                    best_offer = {
-                                        "country": country_name,
-                                        "vendor": vendor,
-                                        "cost": cost,
-                                        "info": info
-                                    }
-
-    print(best_offer)
-    country = best_offer['country']
-    operator = best_offer['vendor']
-    price = best_offer['cost']
-    
-
+async def getPhoneNumber(country):
 
     url = f"https://5sim.net/v1/user/buy/activation/{country}/any/google?"
 
@@ -64,7 +34,7 @@ async def getPhoneNumber():
     print("Status:", response.status_code)
     print("Response:", response.text)
 
-    country_upper = best_offer['country'].upper()
+    country_upper = country.upper()
     country_code = CountryCode[country_upper].value
 
     try:
@@ -82,10 +52,10 @@ async def getPhoneNumber():
     except KeyError:
         print("could not format number")
         return None
- 
+
 
 async def getCountry():
-    
+
     url = f"https://5sim.net/v1/guest/prices"
     response = requests.get(url)
     data = response.json()
@@ -114,4 +84,27 @@ async def getCountry():
     country = best_offer['country']
     
     return country
+
+
+async def checkStatus(number_id):
+    HEADERS = {
+        'Authorization': f'Bearer {api_key}',
+        'Accept': 'application/json'
+    }
+
+    url = f'https://5sim.net/v1/user/check/{number_id}'
+    response = requests.get(url, headers=HEADERS)
+
+    if response.status_code != 200:
+        print("Error: ", response.text)
+        return None
+
+    data = response.json()
+    status = data.get("status")
+    
+    if status == "RECEIVED":
+        sms = data.get("sms", [])
+        return sms.get("code", "")
+    else:
+        return None
 
