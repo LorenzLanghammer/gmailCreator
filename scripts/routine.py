@@ -74,7 +74,7 @@ class SearchPage_routine(Routine):
         moveToPoint( accept_position.x, accept_position.y, 2)
         pag.click()
 
-        searchBar_position = await get_position_by_selector('[aria-label="Suche"]', self.tab)
+        searchBar_position = await get_position_by_selector('#APjFqb', self.tab)
         moveToPoint(searchBar_position.x, searchBar_position.y, 2)
         pauseAt()
         pag.click()
@@ -82,8 +82,7 @@ class SearchPage_routine(Routine):
         type("create gmail account")
         pag.press("enter")
 
-        await self.tab.wait_for_ready_state("complete", timeout=10)
-        googleResult_position = await get_position_by_selector("h3.LC20lb", self.tab)
+        googleResult_position = await get_position_by_selector("h3", self.tab)
         pauseAt()
         moveToPoint(googleResult_position.x, googleResult_position.y, 2)
         pag.click()
@@ -95,7 +94,7 @@ class GotoPage_routine(Routine):
         randomMouseMovement(random.uniform(100, 400), random.uniform(100, 500))
         scrollDown(random.randint(5, 8))
 
-        buttonLocation = await get_position_by_text("Create an account", self.tab)
+        buttonLocation = await get_position_by_selector("#page-width-container > div.main-content > article > section > div > div.article-content-container > div > p:nth-child(5) > a", self.tab)
         moveToPoint(buttonLocation.x, buttonLocation.y, 2)
         pag.click()
 
@@ -105,7 +104,8 @@ class SelectAccountType_routine(Routine):
     async def executeRoutine(self):
     
         await asyncio.sleep(1)
-        erstellen_position = await get_position_by_text('Konto erstellen', self.tab)        
+        #erstellen_position = await get_position_by_text('Utwórz konto', self.tab)        
+        erstellen_position = await get_position_by_selector('#yDmH0d > c-wiz > div > div.JYXaTc > div > div.FO2vFd > div > div > div:nth-child(1) > div > button > span', self.tab)
         moveToPoint(erstellen_position.x, erstellen_position.y, 3)
         pag.click()
 
@@ -131,12 +131,14 @@ class EnterName_routine(Routine):
         first_name_position = await get_position_by_selector("#firstName", self.tab)
         moveToPoint(first_name_position.x, first_name_position.y, 2)
         pag.click()
-        type("test")
+        type(firstName)
+        #type("test")
 
         last_name_position = await get_position_by_selector("#lastName", self.tab)
         moveToPoint(last_name_position.x, last_name_position.y, 2)
         pag.click()
-        type("test")
+        type(lastName)
+        #type("test")
 
         weiter_button_position = await get_position_by_selector('[jsname="V67aGc"]', self.tab)
         moveToPoint(weiter_button_position.x, weiter_button_position.y, 2)
@@ -200,8 +202,8 @@ class EnterDateAndGender_routine(Routine):
 
 class SelectAddressType_routine(Routine):
     async def executeRoutine(self):
-        adresse_erstellen_position = await get_position_by_selector('[jsname="ornU0b"]', self.tab)
-        moveToPoint(adresse_erstellen_position.x, adresse_erstellen_position.y, 2)
+        adresse_erstellen_position = await get_position_by_selector_exact('#yDmH0d > c-wiz > div > div.UXFQgc > div > div > div > form > span > section > div > div > div.myYH1.v5IR3e.V9RXW > div.Hy62Fc > div > span > div:nth-child(1) > div > div.uxXgMe > div > div.SCWude', self.tab)
+        moveToPoint(adresse_erstellen_position.x + 2, 453, 2)
         pag.click()
 
         weiter_position = await get_position_by_selector('.VfPpkd-dgl2Hf-ppHlrf-sM5MNb', self.tab)
@@ -210,24 +212,42 @@ class SelectAddressType_routine(Routine):
         pauseAt()
 
 
-
 class SelectAddress_routine(Routine):
     async def executeRoutine(self):
 
-        name_field_position = await get_position_by_text('Nutzername', self.tab)
-        if name_field_position:
-            print("found address field")
+        #name_field_position = await get_position_by_text('Nutzername', self.tab)
+        try:
+            name_field_position = await get_position_by_selector('#yDmH0d > c-wiz > div > div.UXFQgc > div > div > div > form > span > section > div > div > div > div.AFTWye > div > div.aCsJod.oJeWuf > div > div.Xb9hP > input', self.tab)
+            count = 0
+            found_available_name = False
+
             moveToPoint(name_field_position.x + 20, name_field_position.y + 20, 2)
             pag.click()
-            pauseAt()
-            type(generateEmail(name[0], name[1], 0))
+            type(generateEmail(name[0], name[1], count))
             pag.press("enter")
 
-        else:
+            if await is_element_on_page("#passwd", self.tab):
+                    print("found password field")
+                    found_available_name = True
+
+            while not found_available_name:
+                print("looking for available name")
+                count = count + 1
+                pag.click()
+                pag.press("backspace")
+                type(str(count))
+                pag.press("enter")
+                if await is_element_on_page("#passwd", self.tab):
+                    found_available_name = True
+
+        except:
             print("did not find address field")
             moveToPoint(993, 451, 2)
             pag.click()
-
+            next_button_position = await get_position_by_selector("#next > div > button > div.VfPpkd-RLmnJb", self.tab)
+            moveToPoint(next_button_position.x, next_button_position.y, 2)
+            pag.click()
+            pauseAt()
 
 
 class EnterPassword_routine(Routine):
@@ -258,27 +278,64 @@ class EnterPhoneNumber_routine(Routine):
 
     async def executeRoutine(self):
         enter_successfull = False
-      
 
-        number_field_position = get_position_by_selector("#phoneNumberId", self.tab)
+
+        number_field_position = await get_position_by_selector("#phoneNumberId", self.tab)
         moveToPoint(number_field_position.x, number_field_position.y, 2)
         pag.click()
-        
-        async def typeNumber():
-            while (enter_successfull == False):
-                phone = getPhoneNumber(self.country)
-                    
-                try:
-                    type(phone.number)
-                    pag.press("Enter")
-                except: 
-                    print("could not get phone number")
 
-                while (True):
-                    code = checkStatus(phone.id)
-                    if(code):
-                        
-                        
+        while (enter_successfull == False):
+            phone = await getPhoneNumber(self.country)
+    
+            try:
+                type(phone.number)
+                length = len(phone.number)
+                pag.press("Enter")
+            except: 
+                print("could not get phone number")
+                continue
+
+            try:
+                code_field_position = await get_position_by_selector("#code", self.tab)
+                print("number available")
+            except:
+                print("phone number banned")
+                cancelled = await cancelOrder(phone.id)
+                pag.click()
+                for i in range (0, length):
+                    pag.press("backspace")
+                continue
+
+            start_time = time.time()
+            timeout = 30
+
+            while (True):
+                code = await checkStatus(phone.id)
+                if(code):
+                   
+                    moveToPoint(code_field_position.x, code_field_position.y, 2)
+                    pag.click()
+                    type(code)
+                    pag.press("Enter")
+                    enter_successfull = True
+                    break
+                
+                if time.time() - start_time > timeout:
+                    print("Timeout: Code was not received within time limit.")
+                    await cancelOrder(phone.id)
+                    pag.hotkey('alt', 'left')
+                    break
+
+
+
+
+
+class DeclineRecoveryMailRoutine(Routine):
+    async def executeRoutine(self):
+        declinemail_position = get_position_by_selector("#recoverySkip > div > button > div.VfPpkd-RLmnJb", self.tab)
+        moveToPoint(declinemail_position.x, declinemail_position.y, 2)
+        pag.click()
+
 
 
 
@@ -304,14 +361,6 @@ moveToPoint(data["weiterButtonX"], data["weiterButtonY"], 2)
 pauseAt()
 
 '''
-
-
-
-
-
-
-
-
 
 
 

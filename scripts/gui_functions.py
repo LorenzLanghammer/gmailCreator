@@ -77,61 +77,109 @@ def generateTimeOffset():
 
 
 
-def randomMouseMovement(currentX, currentY, targetX, targetY):
+def randomMouseMovement(targetX, targetY):
     num_points = random.randint(2, 5)
 
-    startX = currentX
-    startY = currentY
+    startX = pyautogui.position().x
+    startY = pyautogui.position().y
     newX = 0
     newY = 0
     for i in range(num_points):
         if (i == num_points - 1):
-            moveToPoint(startX, startY, targetX, targetY, 4)
+            moveToPoint(targetX, targetY, 4)
         else:
             newX = random.randint(0, maxX)
             newY = random.randint(0, maxY)
-            moveToPoint(startX, startY, newX, newY, 4)
+            moveToPoint(newX, newY, 4)
             startX = newX
             startY = newY
 
 async def get_position_by_selector(text, tab):
-    await tab.wait_for_ready_state("complete", timeout=10)
-    try:
-        element = await tab.select(text)
-    except:
-        print("could not find element")
-        return
-    
-    position = await element.get_position(abs=False)
-    if position.width > 25:
-        return ScreenPosition((position.x + 30) + position.width / 2, (position.y + 80) + position.height / 2)
-    else:
-        return ScreenPosition((position.x + 15), position.y + 90)
+
+    start_time = time.time()
+    while time.time() - start_time < 10:
+        try:
+            element = await tab.select(text)
+            if element:
+             
+                try:
+                    position = await element.get_position(abs=False)
+                    return ScreenPosition((position.x + 35) + position.width / 2, (position.y + 85) + position.height / 2)
+                except:
+                    print("could not find position")
+        except Exception:
+            pass
+        await asyncio.sleep(0.5)
+
+    raise TimeoutError(f"Timeout waiting for selector: {text}")
+
+
+
+async def get_position_by_selector_exact(text, tab):
+    start_time = time.time()
+    while time.time() - start_time < 10:
+        try:
+            element = await tab.select(text)
+            if element:
+             
+                try:
+                    position = await element.get_position(abs=False)
+                    return ScreenPosition((position.x), (position.y))
+                except:
+                    print("could not find position")
+        except Exception:
+            pass
+        await asyncio.sleep(0.5)
+
+    raise TimeoutError(f"Timeout waiting for selector: {text}")
+
+
 
 
 async def get_position_by_text(text, tab):
-    await tab.wait_for_ready_state("complete", timeout=10)
+    asyncio.sleep(3)
     try:
         element = await tab.find_element_by_text(text, best_match=True)
         if not element:
             return
     except:
-        print("could not find element")
         return
     position = await element.get_position(abs=False)
     return ScreenPosition((position.x + 35) + position.width / 2, (position.y + 85) + position.height / 2)
-   
+
+
+
+
+async def wait_for_selector(tab, selector, timeout=3, poll_interval=0.5):
+    await tab.wait_for_ready_state("complete", timeout=10)
+    start_time = time.time()
+    while time.time() - start_time < timeout:
+        try:
+            element = await tab.select(selector)
+            if element:
+                return element
+        except Exception:
+            pass
+        await asyncio.sleep(poll_interval)
+
+    raise TimeoutError(f"Timeout waiting for selector: {selector}")
+
 
 
 async def is_element_on_page(selector, tab):
-    await tab.wait_for_ready_state("complete", timeout=10)
-
+    #await tab.wait_for_ready_state("complete", timeout=10)
+    await asyncio.sleep(1)
     try:
-        element = await tab.select(selector)
+        element = await tab.select(selector, timeout = 2)
+        if element:
+            "found element on page"
+            return True
+        else:
+            "could not find element on page"
+            return False
     except:
-        print("element is not on page")
+        "exception finding element"
         return False
-    return True
 
 
 
@@ -154,5 +202,10 @@ def type(text):
         pyautogui.write(char)
         time.sleep(random.uniform(0.05, 0.25))
 
-scrollDown(4)
+
+
+
+
+
+
 

@@ -1,0 +1,43 @@
+code field: 
+#code
+
+decline recovery mail
+#recoverySkip > div > button > div.VfPpkd-RLmnJb
+
+
+weiter button
+#yDmH0d > c-wiz > div > div.JYXaTc > div > div > div > div > button > div.VfPpkd-RLmnJb
+
+
+alles auf einmal: 
+#yDmH0d > c-wiz > div > div.UXFQgc > div > div > div.AcKKx > form > span > section > div > div > div > div > div.Hy62Fc > div > span > div:nth-child(1) > div > div.uxXgMe > div > div.SCWude > div
+
+
+zustimmen: 
+#yDmH0d > c-wiz > div > div.JYXaTc.COi2Ke.N0osAb.F8PBrb.lUWEgd.NNItQ > div > div.TNTaPb > div:nth-child(1) > div > div > button > span
+
+finish: 
+#yDmH0d > c-wiz > div > div.JYXaTc.F8PBrb > div > div > div:nth-child(2) > div > div > button > span
+
+
+finish2:
+#yDmH0d > c-wiz > div > div.JYXaTc.lUWEgd > div > div.TNTaPb > div > div > button > span
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1490.541259765625
+451.0
+
+
+

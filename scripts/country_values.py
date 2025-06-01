@@ -116,3 +116,40 @@ class CountryTimezone(Enum):
     SWEDEN = "Europe/Stockholm"
     SWITZERLAND = "Europe/Zurich"
 
+
+class CountryProxy(Enum):
+    AUSTRIA = "at"
+    BELGIUM = "be"
+    CROATIA = "hr"
+    CYPRUS = "cy" 
+    CZECH = "cz"
+    DENMARK = "dk"
+    ENGLAND = "gb"
+    FINLAND = "fi"
+    FRANCE = "fr"
+    GERMANY = "de"
+    GREECE = "gr"
+    HUNGARY = "hu"
+    IRELAND = "ie"
+    ITALY = "it"
+    LATVIA = "lv"
+    LITHUANIA = "lt"
+    NETHERLANDS = "nl"
+    NORWAY = "no"
+    POLAND = "pl"
+    ROMANIA = "ro"
+    SLOVAKIA = "sk"
+    SLOVENIA = "si"
+    SPAIN = "es"
+    SERBIA = "rs"
+    SWEDEN = "se"
+    SWITZERLAND = "ch"
+
+
+
+
+
+
+
+
+

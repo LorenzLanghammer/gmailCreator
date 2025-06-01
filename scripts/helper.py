@@ -55,6 +55,10 @@ def generate_password(length=12):
     random.shuffle(password)
     return ''.join(password)
 
+def generate_session_string(length=8):
+    characters = string.ascii_letters + '123456789'  # Excludes '0'
+    return ''.join(random.choices(characters, k=length))    
+
 
 #asyncio.run(getPhoneNumber())
 

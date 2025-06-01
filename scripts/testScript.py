@@ -51,7 +51,15 @@ proxy_port = 12321
 proxy_username = "KwkgoQ0MuFBREzYL"
 proxy = f"http://{proxy_host}:{proxy_port}"
 
-extension_path = os.path.join(source_dir, "extensions/WebRTC-Control")
+extension_path = os.path.join(source_dir, "extensions\WebRTC-Control")
+extension_path = extension_path.replace("\\", "/")
+
+
+def testPath():
+    print(f"Resolved extension path: {extension_path}")
+    print(f"Path exists: {os.path.exists(extension_path)}")
+    print("Contents:", os.listdir(extension_path))
+
 
 async def main():
     best_country = "germany"
@@ -59,8 +67,8 @@ async def main():
         country = best_country.upper()
     spoofed_timezone = CountryTimezone[country].value
     spoofed_language = Language[country].value
-    session_string = generate_session_string()
-    proxy_password = f"BMaEeNUjtiKcQZ8i_country-de_session-{session_string}_lifetime-5m"
+    
+    proxy_password = f"BMaEeNUjtiKcQZ8i_country-de_session-oMF86kcB_lifetime-30m"
 
     timezone_spoof_script = f"""
         (() => {{
@@ -96,10 +104,11 @@ async def main():
     browser = await zd.start(
         browser_args=[ 
             "--disable-extensions-except=" + extension_path,
-            f"--lang={spoofed_language}",
-            f"--proxy-server={proxy}",
             f"--load-extension={extension_path}",
-            '--disable-webgl',
+            "--auto-open-devtools-for-tabs",
+            f"--proxy-server={proxy}",
+
+
         ],     
                 headless=False
     )
@@ -117,84 +126,13 @@ async def main():
 
 
     await asyncio.sleep(3)
-    await tab.get("https://accounts.google.com/v3/signin/identifier?ifkv=AdBytiNHx9gqOjAdI2ImvqBApnsU4v_SN9dVm1yaJibrHqQTWdBo6pWrMnKSzgnZU8HYlBGaR53q&flowName=GlifWebSignIn&flowEntry=ServiceLogin&dsh=S471759149%3A1748625151149630")
-    #await tab.get("https://google.com")
+    await tab.get("https://google.com")
 
-    
-    
     enterCredentials_routine = EnterCredentials_routine(tab, proxy_username, proxy_password)
     await enterCredentials_routine.executeRoutine()
 
-    '''
-    searchPage_routine = SearchPage_routine(tab)
-    await searchPage_routine.executeRoutine()
-
-
-
-    gotoPage_routine = GotoPage_routine(tab)
-    await gotoPage_routine.executeRoutine()
-    
-    await asyncio.sleep(1)
-
-    new_tab = browser.tabs[-1]
-    await new_tab.activate()
-    await asyncio.Event().wait()  
-    '''
-
-    selectAccountType_routine = SelectAccountType_routine(tab)
-    await selectAccountType_routine.executeRoutine()
-
-    enterName_routine = EnterName_routine(tab)
-    await enterName_routine.executeRoutine()
-
-    enterDateAndGender_routine = EnterDateAndGender_routine(tab)
-    await enterDateAndGender_routine.executeRoutine()
-
-    selectAddressType_routine = SelectAddressType_routine(tab)
-    await selectAddressType_routine.executeRoutine()
-
-    selectAddress_routine = SelectAddress_routine(tab)
-    await selectAddress_routine.executeRoutine()
-
-    enterPassword_routine = EnterPassword_routine(tab)
-    await enterPassword_routine.executeRoutine()
-
-    enterPhoneNumber_routine = EnterPhoneNumber_routine(tab, best_country)
-    await enterPhoneNumber_routine.executeRoutine()
-
-    await asyncio.Event().wait()  
-
+    await asyncio.Event().wait()
 
 asyncio.run(main())
 
-
-'''
-async def start_browser():
-    proxy_host = "geo.iproyal.com"
-    proxy_port = 12321
-
-    proxy = f"http://{proxy_host}:{proxy_port}"
-
-    browser = await zd.start(browser_args=[f"--proxy-server={proxy}"])
-    main_tab = await browser.get()
-    await asyncio.Event().wait()  # Wait forever
-
-
-
-routines = [SearchPage_routine(), 
-        GotoPage_routine(), 
-        SelectAccountType_routine(),
-        EnterName_routine(), 
-        EnterDateAndGender_routine(), 
-        SelectAddressType_routine(), 
-        SelectAddress_routine()
-        ]
-
-
-'''
-
-
-
-
-
-
+#testPath()

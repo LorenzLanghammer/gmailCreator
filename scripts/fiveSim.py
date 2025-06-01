@@ -31,8 +31,9 @@ async def getPhoneNumber(country):
     }
 
     response = requests.get(url, headers=headers)
-    print("Status:", response.status_code)
-    print("Response:", response.text)
+
+    if(response.text == "no free phones"):
+        return None
 
     country_upper = country.upper()
     country_code = CountryCode[country_upper].value
@@ -103,8 +104,43 @@ async def checkStatus(number_id):
     status = data.get("status")
     
     if status == "RECEIVED":
-        sms = data.get("sms", [])
-        return sms.get("code", "")
+        sms_list = data.get("sms", [])
+        try:
+            return sms_list[0].get("code", "")
+        except:
+            return None
     else:
         return None
+
+
+async def cancelOrder(number_id):
+    HEADERS = {
+        'Authorization': f'Bearer {api_key}',
+        'Accept': 'application/json'
+    }
+
+    url = 'https://5sim.net/v1/user/cancel/'
+    response = requests.get(url + str(number_id), headers=HEADERS)
+    data = response.json()
+    status = data.get("status")
+    print(status)
+    if (status != "CANCELED"):
+        print("order cancelled")
+        return False
+    else:
+         print("could not cancel")
+         return True 
+
+
+
+
+
+
+
+
+
+
+
+
+
 
