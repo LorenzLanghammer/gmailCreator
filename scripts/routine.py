@@ -41,14 +41,15 @@ name = generateName()
 
 
 class Routine:
-    def __init__(self, tab):
+    def __init__(self, tab, identifier):
         self.tab = tab
+        self.identifier = identifier
     async def executeRoutine(self):
         pass
 
 class EnterCredentials_routine(Routine):
     def __init__(self, tab, proxy_username, proxy_password):
-        super().__init__(tab)
+        super().__init__(tab, identifier="")
         self.proxy_username = proxy_username
         self.proxy_password = proxy_password
 
@@ -69,6 +70,9 @@ class EnterCredentials_routine(Routine):
         pag.click()
 
 class SearchPage_routine(Routine):
+    def __init__(self, tab):
+        super().__init__(tab, identifier="#L2AGLb")
+
     async def executeRoutine(self):
         accept_position = await get_position_by_selector("#L2AGLb", self.tab)
         moveToPoint( accept_position.x, accept_position.y, 2)
@@ -90,6 +94,9 @@ class SearchPage_routine(Routine):
 
 
 class GotoPage_routine(Routine):
+    def __init__(self, tab):
+        super().__init__(tab, identifier = "#page-width-container > div.main-content > article > section > div > div.article-content-container > div > p:nth-child(5) > a")
+
     async def executeRoutine(self):
         randomMouseMovement(random.uniform(100, 400), random.uniform(100, 500))
         scrollDown(random.randint(5, 8))
@@ -101,6 +108,9 @@ class GotoPage_routine(Routine):
 
 
 class SelectAccountType_routine(Routine):
+
+    def __init__(self, tab):
+        super().__init__(tab, identifier="fkv=AdBytiP1gCwbFpuisNMmWbBv68W")
     async def executeRoutine(self):
     
         await asyncio.sleep(1)
@@ -123,6 +133,10 @@ class SelectAccountType_routine(Routine):
 
 
 class EnterName_routine(Routine):
+
+    def __init__(self, tab):
+        super().__init__(tab, identifier="signup/name")
+
     async def executeRoutine(self):
 
         firstName = name[0]
@@ -146,6 +160,10 @@ class EnterName_routine(Routine):
 
 
 class EnterDateAndGender_routine(Routine):
+
+    def __init__(self, tab):
+        super().__init__(tab, identifier="signup/birthdaygender")
+
     async def executeRoutine(self):
 
         gender = name[2]
@@ -201,6 +219,9 @@ class EnterDateAndGender_routine(Routine):
 
 
 class SelectAddressType_routine(Routine):
+    def __init__(self, tab):
+        super().__init__(tab, identifier="")
+
     async def executeRoutine(self):
         adresse_erstellen_position = await get_position_by_selector_exact('#yDmH0d > c-wiz > div > div.UXFQgc > div > div > div > form > span > section > div > div > div.myYH1.v5IR3e.V9RXW > div.Hy62Fc > div > span > div:nth-child(1) > div > div.uxXgMe > div > div.SCWude', self.tab)
         moveToPoint(adresse_erstellen_position.x + 2, 453, 2)
@@ -213,6 +234,10 @@ class SelectAddressType_routine(Routine):
 
 
 class SelectAddress_routine(Routine):
+
+    def __init__(self, tab):
+        super().__init__(tab, identifier="signup/username")
+
     async def executeRoutine(self):
 
         #name_field_position = await get_position_by_text('Nutzername', self.tab)
@@ -251,6 +276,10 @@ class SelectAddress_routine(Routine):
 
 
 class EnterPassword_routine(Routine):
+
+    def __init__(self, tab):
+        super().__init__(tab, identifier="signup/password")
+
     async def executeRoutine(self):
         password = generate_password(random.randint(8, 15))
         
@@ -273,7 +302,7 @@ class EnterPassword_routine(Routine):
 
 class EnterPhoneNumber_routine(Routine):
     def __init__(self, tab, country):
-        super().__init__(tab)
+        super().__init__(tab, identifier="signup/mophoneverification")
         self.country = country
 
     async def executeRoutine(self):
@@ -331,8 +360,11 @@ class EnterPhoneNumber_routine(Routine):
 
 
 class DeclineRecoveryMailRoutine(Routine):
+    def __init__(self, tab):
+        super().__init__(tab, identifier="#recoverySkip > div > button > div.VfPpkd-RLmnJb")
+
     async def executeRoutine(self):
-        declinemail_position = get_position_by_selector("#recoverySkip > div > button > div.VfPpkd-RLmnJb", self.tab)
+        declinemail_position = await get_position_by_selector("#recoverySkip > div > button > div.VfPpkd-RLmnJb", self.tab)
         moveToPoint(declinemail_position.x, declinemail_position.y, 2)
         pag.click()
 

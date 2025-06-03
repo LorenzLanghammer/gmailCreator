@@ -62,13 +62,13 @@ def testPath():
 
 
 async def main():
-    best_country = "germany"
+    best_country = "england"
     if (best_country):
         country = best_country.upper()
     spoofed_timezone = CountryTimezone[country].value
     spoofed_language = Language[country].value
     
-    proxy_password = f"BMaEeNUjtiKcQZ8i_country-de_session-oMF86kcB_lifetime-30m"
+    proxy_password = f"BMaEeNUjtiKcQZ8i_country-gb_session-4Gf6kcB_lifetime-30m"
 
     timezone_spoof_script = f"""
         (() => {{
@@ -107,6 +107,8 @@ async def main():
             f"--load-extension={extension_path}",
             "--auto-open-devtools-for-tabs",
             f"--proxy-server={proxy}",
+            f"--lang={spoofed_language}",
+
 
 
         ],     
