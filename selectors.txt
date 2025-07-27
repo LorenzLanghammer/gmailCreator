@@ -1,0 +1,22 @@
+https://accounts.google.com/v3/signin/identifier?ifkv=AdBytiMibvoLDumTsdmEKwU-Jb95Vx9SE20DwMqRZDfZ7F9R11x6WAgAydFFOKw_mKpU6E2vNAmzbw&flowName=GlifWebSignIn&flowEntry=ServiceLogin&dsh=S805787842%3A1748987748744642
+
+
+
+
+name:
+
+https://accounts.google.com/lifecycle/steps/signup/name?dsh=S805787842:1748987748744642&flowEntry=SignUp&flowName=GlifWebSignIn&ifkv=AdBytiMibvoLDumTsdmEKwU-Jb95Vx9SE20DwMqRZDfZ7F9R11x6WAgAydFFOKw_mKpU6E2vNAmzbw&TL=ALgCv6yhhSJCSWsTTvM42sRJar_n6CHyFFrrpZ0k2n0iqx6W6q746WEmslhBgYE7&continue=https://accounts.google.com/ManageAccount?nc%3D1
+
+
+
+date and gender:
+https://accounts.google.com/lifecycle/steps/signup/birthdaygender?TL=ALgCv6yhhSJCSWsTTvM42sRJar_n6CHyFFrrpZ0k2n0iqx6W6q746WEmslhBgYE7&continue=https%3A%2F%2Faccounts.google.com%2FManageAccount%3Fnc%3D1&dsh=S805787842%3A1748987748744642&flowEntry=SignUp&flowName=GlifWebSignIn&ifkv=AdBytiMibvoLDumTsdmEKwU-Jb95Vx9SE20DwMqRZDfZ7F9R11x6WAgAydFFOKw_mKpU6E2vNAmzbw
+
+
+username:
+https://accounts.google.com/lifecycle/steps/signup/username?TL=ALgCv6yhhSJCSWsTTvM42sRJar_n6CHyFFrrpZ0k2n0iqx6W6q746WEmslhBgYE7&continue=https%3A%2F%2Faccounts.google.com%2FManageAccount%3Fnc%3D1&dsh=S805787842%3A1748987748744642&flowEntry=SignUp&flowName=GlifWebSignIn&ifkv=AdBytiMibvoLDumTsdmEKwU-Jb95Vx9SE20DwMqRZDfZ7F9R11x6WAgAydFFOKw_mKpU6E2vNAmzbw
+
+
+
+password:
+https://accounts.google.com/lifecycle/steps/signup/password?TL=ALgCv6yhhSJCSWsTTvM42sRJar_n6CHyFFrrpZ0k2n0iqx6W6q746WEmslhBgYE7&continue=https%3A%2F%2Faccounts.google.com%2FManageAccount%3Fnc%3D1&dsh=S805787842%3A1748987748744642&flowEntry=SignUp&flowName=GlifWebSignIn&ifkv=AdBytiMibvoLDumTsdmEKwU-Jb95Vx9SE20DwMqRZDfZ7F9R11x6WAgAydFFOKw_mKpU6E2vNAmzbw
